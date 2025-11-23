@@ -22,26 +22,11 @@ FastAPI backend with Gemini AI integration for generating dynamic, role-based in
    ```bash
    python -m venv venv
    source venv/Scripts/activate  # Windows
-   # or
-   source venv/bin/activate  # macOS/Linux
    ```
 
 2. **Install dependencies**
    ```bash
    pip install -r requirements.txt
-   ```
-
-3. **Setup environment variables**
-   ```bash
-   cp .env.example .env
-   # Edit .env and add your GEMINI_API_KEY
-   ```
-
-4. **Run the server**
-   ```bash
-   python main.py
-   # or
-   uvicorn main:app --reload
    ```
 
 The API will be available at `http://localhost:8000`
@@ -107,10 +92,6 @@ The API will be available at `http://localhost:8000`
   - Request: `{ "role": "...", "chat": [...], "scores": {...} }`
   - Response: `{ "success": true, "report": {...} }`
 
-### Health
-- `GET /health` - Health check
-- `GET /` - API info
-
 ## 🎯 How It Works
 
 ### Question Generation Flow
@@ -133,14 +114,6 @@ The API will be available at `http://localhost:8000`
    - Alignment with resume
 4. Detailed feedback returned with score
 
-## 🔐 Environment Variables
-
-```
-GEMINI_API_KEY=your_api_key_here
-HOST=0.0.0.0
-PORT=8000
-```
-
 ## 📦 Dependencies
 
 - **fastapi** - Web framework
@@ -150,18 +123,6 @@ PORT=8000
 - **python-dotenv** - Environment management
 - **python-multipart** - File upload support
 
-## 🚀 Deployment
-
-### Local Development
-```bash
-uvicorn main:app --reload --host 0.0.0.0 --port 8000
-```
-
-### Production
-```bash
-uvicorn main:app --host 0.0.0.0 --port 8000 --workers 4
-```
-
 ## 📝 Notes
 
 - Questions are generated dynamically using Gemini AI
@@ -169,11 +130,3 @@ uvicorn main:app --host 0.0.0.0 --port 8000 --workers 4
 - All responses are validated with Pydantic models
 - CORS is enabled for frontend communication
 - Session storage is in-memory (use database in production)
-
-## 🤝 Contributing
-
-Feel free to submit issues and enhancement requests!
-
-## 📄 License
-
-MIT License
