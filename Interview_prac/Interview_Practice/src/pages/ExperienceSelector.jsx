@@ -1,0 +1,95 @@
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { api } from "../api";
+import { useInterview } from "../utils/InterviewContext.jsx";
+
+const experienceLevels = [
+  { label: "Fresher", value: "0" },
+  { label: "0 - 1 years", value: "0-1" },
+  { label: "1 - 2 years", value: "1-2" },
+  { label: "2 - 3 years", value: "2-3" },
+  { label: "3 - 5 years", value: "3-5" },
+  { label: "5+ years", value: "5+" },
+];
+
+const ExperienceSelector = () => {
+  const navigate = useNavigate();
+  const { experience, setExperience } = useInterview();
+  const [selectedExp, setSelectedExp] = useState(experience || "");
+  const [error, setError] = useState("");
+
+  const handleContinue = async () => {
+    if (!selectedExp) {
+      setError("Please choose your experience level.");
+      return;
+    }
+
+    setError("");
+
+    // Save to context
+    setExperience(selectedExp);
+
+    // Send experience to backend
+    await api.post("/set-experience", { experience: selectedExp });
+
+    navigate("/difficulty");
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-black text-white flex items-center justify-center px-4 py-10">
+      {/* Animated background elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-1/4 right-0 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-1/4 left-0 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: "1s" }}></div>
+      </div>
+
+      <div className="relative z-10 w-full max-w-2xl">
+        {/* Card */}
+        <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 border border-cyan-500/30 shadow-2xl">
+          
+          {/* Title */}
+          <div className="text-center mb-10">
+            <h1 className="text-4xl font-bold bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent mb-2">
+              Your Experience
+            </h1>
+            <p className="text-cyan-200">Select your professional experience level</p>
+          </div>
+
+          {/* Experience Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+            {experienceLevels.map((item, index) => (
+              <button
+                key={index}
+                onClick={() => setSelectedExp(item.value)}
+                className={`p-5 border-2 rounded-xl text-center font-bold transition-all transform hover:scale-105 ${
+                  selectedExp === item.value
+                    ? "bg-gradient-to-r from-cyan-500 to-blue-600 border-cyan-400 text-white shadow-lg shadow-cyan-500/50"
+                    : "bg-white/5 border-cyan-500/30 text-cyan-100 hover:bg-white/10 hover:border-cyan-400"
+                }`}
+              >
+                {item.label}
+              </button>
+            ))}
+          </div>
+
+          {/* Error Message */}
+          {error && (
+            <div className="p-3 bg-red-500/20 border border-red-500/50 rounded-lg text-red-200 text-sm font-medium mb-4 text-center">
+              {error}
+            </div>
+          )}
+
+          {/* Continue Button */}
+          <button
+            onClick={handleContinue}
+            className="w-full py-3 bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-bold rounded-xl hover:from-cyan-400 hover:to-blue-500 transition transform hover:scale-105 shadow-lg"
+          >
+            Continue
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default ExperienceSelector;
